@@ -14,7 +14,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "code-tracker.start",
+        "command": "code-trackin.start",
         "title": "Start GitHub Activity Monitor"
       }
     ]
