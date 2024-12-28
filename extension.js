@@ -1,11 +1,9 @@
 const vscode = require("vscode");
-const { createRepository } = require("./github");
-const { startActivityTracker } = require("./tracker");
+const { createRepository } = require("./helper/createRepository");
+const { startActivityTracker } = require("./helper/startActivityTracker");
+
 
 async function getGitHubToken(context) {
-    // Only clear token if needed for testing
-    // await context.globalState.update("githubAccessToken", undefined);
-    
     const token = await context.globalState.get("githubAccessToken");
     if (token) return token;
 
@@ -31,7 +29,7 @@ async function getGitHubToken(context) {
 function activate(context) {
     let trackerActive = false;
 
-    const disposable = vscode.commands.registerCommand("code-tracker.start", async () => {
+    const disposable = vscode.commands.registerCommand("code-trackin.start", async () => {
         if (trackerActive) {
             vscode.window.showInformationMessage("Code tracker is already running.");
             return;
@@ -44,10 +42,8 @@ function activate(context) {
                 return;
             }
 
-            // Try to get existing repo URL first
             let repoUrl = await context.globalState.get("repoUrl");
             
-            // If no existing repo, create new one
             if (!repoUrl) {
                 repoUrl = await createRepository(token, "code-tracking", "Daily activity tracker", true);
                 if (repoUrl) {

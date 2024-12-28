@@ -4,7 +4,6 @@ const path = require("path");
 const vscode = require("vscode");
 const fsExtra = require("fs-extra");
 const diff = require("diff");
-const os = require("os");
 
 let activityLog = {};
 let extensionContext;
@@ -101,7 +100,6 @@ function createDailyLogDir() {
     const { logsDir } = getStoragePaths();
     const today = new Date().toISOString().split("T")[0];
     const dailyDir = path.join(logsDir, today);
-
     if (!fs.existsSync(dailyDir)) {
         fs.mkdirSync(dailyDir, { recursive: true });
     }
@@ -174,10 +172,10 @@ function startActivityTracker(context, repoUrl, token) {
                 .slice(0, 5)
                 .replace(":", "-")}.txt`;
             const logFilePath = path.join(dailyDir, logFileName);
-
+            
             const activitySummary = generateActivitySummary();
             fs.writeFileSync(logFilePath, activitySummary);
-
+            console.log(logFileName);
             await commitAndPush(repoUrl, token);
             
             activityLog = {};
