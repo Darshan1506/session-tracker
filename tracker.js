@@ -4,6 +4,7 @@ const path = require("path");
 const vscode = require("vscode");
 const fsExtra = require("fs-extra");
 const diff = require("diff");
+const os = require("os");
 
 let activityLog = {};
 let extensionContext;
@@ -100,6 +101,7 @@ function createDailyLogDir() {
     const { logsDir } = getStoragePaths();
     const today = new Date().toISOString().split("T")[0];
     const dailyDir = path.join(logsDir, today);
+
     if (!fs.existsSync(dailyDir)) {
         fs.mkdirSync(dailyDir, { recursive: true });
     }
@@ -172,10 +174,10 @@ function startActivityTracker(context, repoUrl, token) {
                 .slice(0, 5)
                 .replace(":", "-")}.txt`;
             const logFilePath = path.join(dailyDir, logFileName);
-            
+
             const activitySummary = generateActivitySummary();
             fs.writeFileSync(logFilePath, activitySummary);
-            console.log(logFileName);
+
             await commitAndPush(repoUrl, token);
             
             activityLog = {};
@@ -184,7 +186,7 @@ function startActivityTracker(context, repoUrl, token) {
             console.error("Error in activity tracker:", error);
             vscode.window.showErrorMessage(`Activity tracking error: ${error.message}`);
         }
-    }, 30* 60 * 1000);
+    }, 30 * 60 * 1000);
 
     context.subscriptions.push({
         dispose: () => {
@@ -196,18 +198,6 @@ function startActivityTracker(context, repoUrl, token) {
     });
 }
 
-function stopActivityTracker() {
-    if (!global.trackerInterval) {
-        vscode.window.showInformationMessage("Activity tracker is not running.");
-        return;
-    }
-
-    clearInterval(global.trackerInterval);
-    global.trackerInterval = null;
-    vscode.window.showInformationMessage("Activity tracker stopped.");
-}
-
 module.exports = {
-    startActivityTracker,
-    stopActivityTracker
+    startActivityTracker
 };
