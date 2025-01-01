@@ -184,7 +184,7 @@ function startActivityTracker(context, repoUrl, token) {
             console.error("Error in activity tracker:", error);
             vscode.window.showErrorMessage(`Activity tracking error: ${error.message}`);
         }
-    }, 30 * 1000);
+    }, 60 * 1000);
 
     context.subscriptions.push({
         dispose: () => {
@@ -196,6 +196,18 @@ function startActivityTracker(context, repoUrl, token) {
     });
 }
 
+function stopActivityTracker() {
+    if (!global.trackerInterval) {
+        vscode.window.showInformationMessage("Activity tracker is not running.");
+        return;
+    }
+
+    clearInterval(global.trackerInterval);
+    global.trackerInterval = null;
+    vscode.window.showInformationMessage("Activity tracker stopped.");
+}
+
 module.exports = {
-    startActivityTracker
+    startActivityTracker,
+    stopActivityTracker
 };
