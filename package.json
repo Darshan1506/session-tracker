@@ -16,6 +16,10 @@
       {
         "command": "code-trackin.start",
         "title": "Start GitHub Activity Monitor"
+      },
+      {
+        "command": "code-trackin.stop",
+        "title": "Stop GitHub Activity Monitor"
       }
     ]
   },

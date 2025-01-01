@@ -1,6 +1,6 @@
 const vscode = require("vscode");
 const { createRepository } = require("./helper/createRepository");
-const { startActivityTracker } = require("./helper/startActivityTracker");
+const { startActivityTracker, stopActivityTracker } = require("./helper/startActivityTracker");
 
 
 async function getGitHubToken(context) {
@@ -43,7 +43,7 @@ function activate(context) {
             }
 
             let repoUrl = await context.globalState.get("repoUrl");
-            
+
             if (!repoUrl) {
                 repoUrl = await createRepository(token, "code-tracking", "Daily activity tracker", true);
                 if (repoUrl) {
@@ -64,7 +64,17 @@ function activate(context) {
         }
     });
 
-    context.subscriptions.push(disposable);
+    const stopCommand = vscode.commands.registerCommand("code-trackin.stop", () => {
+        if (!trackerActive) {
+            vscode.window.showInformationMessage("Code tracker is not running.");
+            return;
+        }
+
+        stopActivityTracker();
+        trackerActive = false;
+    });
+
+    context.subscriptions.push(disposable, stopCommand);
 }
 
 function deactivate() {
