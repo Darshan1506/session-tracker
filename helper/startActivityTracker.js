@@ -153,9 +153,9 @@ async function commitAndPush(repoUrl, token) {
     }
 }
 
-function startActivityTracker(context, repoUrl, token) {
+function startActivityTracker(context, repoUrl, token, interval = 15 * 60 * 1000) {
     extensionContext = context;
-    
+    console.log(interval)
     if (global.trackerInterval) {
         clearInterval(global.trackerInterval);
     }
@@ -184,7 +184,7 @@ function startActivityTracker(context, repoUrl, token) {
             console.error("Error in activity tracker:", error);
             vscode.window.showErrorMessage(`Activity tracking error: ${error.message}`);
         }
-    }, 30* 60 * 1000);
+    }, interval);
 
     context.subscriptions.push({
         dispose: () => {

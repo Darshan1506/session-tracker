@@ -20,6 +20,10 @@
       {
         "command": "code-trackin.stop",
         "title": "Stop GitHub Activity Monitor"
+      },
+      {
+        "command": "code-trackin.setInterval",
+        "title": "Select code tracking interval"
       }
     ]
   },
