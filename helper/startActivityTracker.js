@@ -8,6 +8,12 @@ const diff = require("diff");
 let activityLog = {};
 let extensionContext;
 
+function getISTDate() {
+    const currentDate = new Date();
+    const offset = 5.5 * 60 * 60 * 1000;
+    return new Date(currentDate.getTime() + offset);
+}
+
 function getStoragePaths() {
     if (!extensionContext) {
         throw new Error("Extension context not initialized");
@@ -88,7 +94,7 @@ function generateActivitySummary() {
         if (fs.existsSync(filePath)) {
             const { added, removed } = calculateDiff(filePath);
             const relativePath = vscode.workspace.asRelativePath(filePath);
-            return `File: ${relativePath}, Changes: +${added} -${removed}`;
+            return `File: ${filePath}, Changes: +${added} -${removed}`;
         }
         return `File: ${filePath} (deleted or not accessible)`;
     });
@@ -98,7 +104,7 @@ function generateActivitySummary() {
 
 function createDailyLogDir() {
     const { logsDir } = getStoragePaths();
-    const today = new Date().toISOString().split("T")[0];
+    const today = getISTDate().toISOString().split("T")[0];
     const dailyDir = path.join(logsDir, today);
     if (!fs.existsSync(dailyDir)) {
         fs.mkdirSync(dailyDir, { recursive: true });
@@ -139,7 +145,7 @@ async function commitAndPush(repoUrl, token) {
         }
 
         execSync(`git add .`, { cwd: repoDir, stdio: "ignore" });
-        execSync(`git commit -m "Update activity logs - ${new Date().toISOString()}"`, 
+        execSync(`git commit -m "Update activity logs - ${getISTDate().toISOString()}"`, 
             { cwd: repoDir, stdio: "ignore" });
         execSync(`git push --set-upstream origin master --force`, {
             cwd: repoDir,
@@ -165,7 +171,7 @@ function startActivityTracker(context, repoUrl, token, interval = 15 * 60 * 1000
     global.trackerInterval = setInterval(async () => {
         try {
             const dailyDir = createDailyLogDir();
-            const currentTime = new Date();
+            const currentTime = getISTDate();
             const logFileName = `${currentTime
                 .toISOString()
                 .split("T")[1]
@@ -181,8 +187,8 @@ function startActivityTracker(context, repoUrl, token, interval = 15 * 60 * 1000
             activityLog = {};
             
         } catch (error) {
-            console.error("Error in activity tracker:", error);
-            vscode.window.showErrorMessage(`Activity tracking error: ${error.message}`);
+            console.error("Error in Code trackin:", error);
+            vscode.window.showErrorMessage(`Code trackin error: ${error.message}`);
         }
     }, interval);
 
@@ -198,13 +204,13 @@ function startActivityTracker(context, repoUrl, token, interval = 15 * 60 * 1000
 
 function stopActivityTracker() {
     if (!global.trackerInterval) {
-        vscode.window.showInformationMessage("Activity tracker is not running.");
+        vscode.window.showInformationMessage("Code trackin is not running.");
         return;
     }
 
     clearInterval(global.trackerInterval);
     global.trackerInterval = null;
-    vscode.window.showInformationMessage("Activity tracker stopped.");
+    vscode.window.showInformationMessage("Code trackin stopped.");
 }
 
 module.exports = {

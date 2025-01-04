@@ -41,7 +41,7 @@ function activate(context) {
     async () => {
       if (trackerActive) {
         vscode.window.showInformationMessage(
-          "Code tracker is already running."
+          "Code trackin is already running."
         );
         return;
       }
@@ -61,8 +61,8 @@ function activate(context) {
         if (!repoUrl) {
           repoUrl = await createRepository(
             token,
-            "code-tracking",
-            "Daily activity tracker",
+            "Coding-Activity-logs",
+            "Daily coding activity tracker",
             true
           );
           if (repoUrl) {
@@ -74,7 +74,7 @@ function activate(context) {
           startActivityTracker(context, repoUrl, token, trackerInterval);
           trackerActive = true;
           vscode.window.showInformationMessage(
-            "Code tracking started successfully."
+            "Code trackin started successfully."
           );
         } else {
           vscode.window.showErrorMessage(
@@ -116,7 +116,7 @@ function activate(context) {
 
       const selected = await vscode.window.showQuickPick(
         options.map((opt) => opt.label),
-        { placeHolder: "Select code tracking interval" }
+        { placeHolder: "Select code trackin interval" }
       );
 
       if (selected) {
