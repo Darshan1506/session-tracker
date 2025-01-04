@@ -107,8 +107,8 @@ function activate(context) {
     "code-trackin.setInterval",
     async () => {
       const options = [
-        { label: "15 Minutes", value: 15 * 1000 },
-        { label: "30 Minutes", value: 30 * 1000 },
+        { label: "15 Minutes", value: 15 * 60 * 1000 },
+        { label: "30 Minutes", value: 30 * 60 * 1000 },
         { label: "1 Hour", value: 60 * 60 * 1000 },
         { label: "2 Hours", value: 2 * 60 * 60 * 1000 },
         { label: "4 Hours", value: 4 * 60 * 60 * 1000 },
@@ -140,7 +140,6 @@ function activate(context) {
       }
     }
   );
-
 
   context.subscriptions.push(disposable, stopCommand, setIntervalCommand);
 }
