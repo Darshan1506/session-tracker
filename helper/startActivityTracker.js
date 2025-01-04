@@ -25,6 +25,7 @@ function getStoragePaths() {
         tempDir: path.join(globalStoragePath, 'temp'),
         repoDir: path.join(globalStoragePath, 'repo')
     };
+    
 
     Object.values(paths).forEach(dir => {
         if (!fs.existsSync(dir)) {
